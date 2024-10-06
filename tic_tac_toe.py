@@ -7,7 +7,7 @@ EMPTY = " "
 
 # Initial board setup
 def create_board():
-    return [[EMPTY, EMPTY, EMPTY], [EMPTY, EMPTY, EMPTY], [EMPTY, EMPTY, EMPTY]]
+    return [[EMPTY]*3 for i in range(3)]
 
 # Display the board
 def print_board(board):

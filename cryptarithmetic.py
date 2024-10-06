@@ -44,3 +44,12 @@ def code():
         print("No solution found.")
         
 code()
+
+
+
+#         return int("".join(str(solution[letter]) for letter in word))
+
+
+# val = 0
+# for i in first:
+#     val = val*10 + solution[i]
