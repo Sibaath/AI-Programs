@@ -1,21 +1,21 @@
 import math
 
 # Define players
-PLAYER_X = "X"
-PLAYER_O = "O"
+PLAYER_X = "X"  # Human
+PLAYER_O = "O"  # AI
 EMPTY = " "
 
-# Initial board setup
+# Initialize the board
 def create_board():
-    return [[EMPTY, EMPTY, EMPTY], [EMPTY, EMPTY, EMPTY], [EMPTY, EMPTY, EMPTY]]
+    return [[EMPTY]*3 for i in range(3)]
 
-# Display the board
+# Print the board
 def print_board(board):
     for row in board:
         print("|".join(row))
         print("-" * 5)
 
-# Check if the game is over
+# Check if the current player is a winner
 def is_winner(board, player):
     # Check rows, columns, and diagonals
     for i in range(3):
@@ -26,54 +26,62 @@ def is_winner(board, player):
 
     if all([board[i][i] == player for i in range(3)]):  # Check main diagonal
         return True
-    if all([board[i][2 - i] == player for i in range(3)]):  # Check secondary diagonal
+    if all([board[i][2 - i] == player for i in range(3)]):  # Check anti-diagonal
         return True
 
     return False
 
-# Check if the board is full (i.e., no moves left)
+# Check if the board is full
 def is_full(board):
     return all([board[i][j] != EMPTY for i in range(3) for j in range(3)])
 
-# Get all available moves (i.e., empty spots)
+# Get all available moves (empty spots)
 def get_available_moves(board):
     return [(i, j) for i in range(3) for j in range(3) if board[i][j] == EMPTY]
 
-# Minimax algorithm to find the best move
-def minimax(board, depth, is_maximizing):
+# Alpha-Beta Pruning algorithm
+def minimax(board, depth, is_maximizing, alpha, beta):
     if is_winner(board, PLAYER_X):
-        # return -10 + depth
-        return  -1
+        # return -10 + depth  # Human wins, negative score
+        return -1
     elif is_winner(board, PLAYER_O):
-        # return 10 - depth
+        # return 10 - depth  # AI wins, positive score
         return 1
     elif is_full(board):
-        return 0
+        return 0  # Tie
 
     if is_maximizing:
         best_score = -math.inf
         for (i, j) in get_available_moves(board):
             board[i][j] = PLAYER_O
-            score = minimax(board, depth + 1, False)
+            score = minimax(board, depth + 1, False, alpha, beta)
             board[i][j] = EMPTY
             best_score = max(best_score, score)
+            alpha = max(alpha, score)
+            if beta <= alpha:  # Prune the remaining branches
+                break
         return best_score
     else:
         best_score = math.inf
         for (i, j) in get_available_moves(board):
             board[i][j] = PLAYER_X
-            score = minimax(board, depth + 1, True)
+            score = minimax(board, depth + 1, True, alpha, beta)
             board[i][j] = EMPTY
             best_score = min(best_score, score)
+            beta = min(beta, score)
+            if beta <= alpha:  # Prune the remaining branches
+                break
         return best_score
 
-# Get the best move for the AI
+# Get the best move for the AI using Alpha-Beta Pruning
 def get_best_move(board):
     best_score = -math.inf
     best_move = None
+    alpha = -math.inf
+    beta = math.inf
     for (i, j) in get_available_moves(board):
         board[i][j] = PLAYER_O
-        score = minimax(board, 0, False)
+        score = minimax(board, 0, False, alpha, beta)
         board[i][j] = EMPTY
         if score > best_score:
             best_score = score
