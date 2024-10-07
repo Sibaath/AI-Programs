@@ -56,7 +56,7 @@ def local_search(start_node, goal_node, max_iterations=100):
     return current_node, current_value
 
 # Main function to run Local Search with user inputs
-if __name__ == "__main__":
+def code():
     start_node = input("Enter the start node: ").upper()  # Convert to uppercase for consistency
     goal_node = input("Enter the goal node: ").upper()  # Convert to uppercase for consistency
     
@@ -67,3 +67,5 @@ if __name__ == "__main__":
         final_node, final_value = local_search(start_node, goal_node)
         print(f"\nFinal node after local search: {final_node}")
         print(f"Final objective value: {final_value}")
+        
+code()
